@@ -33,10 +33,17 @@ export const register = async (ctx) => {
 
     // hashedpassword 필드 제거
     ctx.body = user.serialize();
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
 };
+
 export const login = async (ctx) => {
   const { username, password } = ctx.request.body;
 
@@ -61,9 +68,27 @@ export const login = async (ctx) => {
     }
 
     ctx.body = user.serialize();
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
 };
-export const check = async (ctx) => {};
-export const logout = async (ctx) => {};
+export const check = async (ctx) => {
+  const { user } = ctx.state;
+  if (!user) {
+    ctx.status = 401;
+    return;
+  }
+  ctx.body = user;
+};
+
+// 로그아웃. 쿠키 지우기
+export const logout = async (ctx) => {
+  ctx.cookies.set('access_token');
+  ctx.status = 204;
+};

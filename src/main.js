@@ -3,11 +3,11 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyParser';
 import mongoose from 'mongoose';
+
 import api from './api';
+import jwtMiddleware from './lib/jwtMiddleware';
 
 const { PORT, MONGO_URI } = process.env;
-
-console.log(MONGO_URI);
 
 mongoose
   .connect(MONGO_URI, {
@@ -28,8 +28,9 @@ const router = new Router();
 // 라우터 설정
 router.use('/api', api.routes());
 
-// 라우터 적용 전 bodyParser 적용
+// 미들웨어 적용
 app.use(bodyParser());
+app.use(jwtMiddleware);
 
 app.use(router.routes()).use(router.allowedMethods());
 
