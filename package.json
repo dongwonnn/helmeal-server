@@ -6,6 +6,8 @@
   "author": "dongwon <kkum9408@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "eslint-config-prettier": "^8.3.0",
     "esm": "^3.2.25",
