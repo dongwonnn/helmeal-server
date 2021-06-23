@@ -1,0 +1,21 @@
+{
+  "name": "helmeal-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/dongwonnn/helmeal-server.git",
+  "author": "dongwon <kkum9408@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "start": "node src",
+    "start:dev": "nodemon --watch src/ src/index.js"
+  }
+}
