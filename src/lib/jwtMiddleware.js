@@ -9,10 +9,8 @@ const jwtMiddleware = async (ctx, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     ctx.state.user = {
       _id: decoded._id,
-      username: decoded.username,
+      userId: decoded.userId,
     };
-
-    console.log(decoded);
 
     // 토큰 남은기간 재발급하기 3.5일 미만이면
     const now = Math.floor(Date.now() / 1000);

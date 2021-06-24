@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const UserSchema = new Schema({
-  username: String,
+  email: String,
+  userId: String,
   hashedPassword: String,
 });
 
@@ -19,8 +20,8 @@ UserSchema.methods.checkPassword = async function (password) {
 };
 
 // 스태틱에서 this는 User
-UserSchema.statics.findByUsername = function (username) {
-  return this.findOne({ username });
+UserSchema.statics.findByuserId = function (userId) {
+  return this.findOne({ userId });
 };
 
 // hasedmethod 지우기
@@ -34,7 +35,7 @@ UserSchema.methods.generateToken = function () {
   const token = jwt.sign(
     {
       _id: this.id,
-      username: this.username,
+      userId: this.userId,
     },
     process.env.JWT_SECRET,
     {

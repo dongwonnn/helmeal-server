@@ -1,5 +1,6 @@
 require('dotenv').config();
 import Koa from 'koa';
+import cors from '@koa/cors';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyParser';
 import mongoose from 'mongoose';
@@ -7,7 +8,7 @@ import mongoose from 'mongoose';
 import api from './api';
 import jwtMiddleware from './lib/jwtMiddleware';
 
-const { PORT, MONGO_URI } = process.env;
+const { PORT, MONGO_URI, CLIENT_HOST } = process.env;
 
 mongoose
   .connect(MONGO_URI, {
@@ -27,6 +28,15 @@ const router = new Router();
 
 // 라우터 설정
 router.use('/api', api.routes());
+
+let corsOptions = {
+  origin: CLIENT_HOST,
+  credentials: true,
+};
+
+// CORS 허용
+app.proxy = true; // true 일때 proxy 헤더들을 신뢰함
+app.use(cors(corsOptions));
 
 // 미들웨어 적용
 app.use(bodyParser());

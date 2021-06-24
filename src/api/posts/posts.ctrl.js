@@ -38,23 +38,15 @@ export const getPostById = async (ctx, next) => {
   return next();
 };
 
-/*
-  POST /api/posts
-  {
-    title: '제목',
-    body: '내용',
-    tags: ['태그1', '태그2']
-  }
-*/
+// 글쓰기
 export const write = async (ctx) => {
   const schema = Joi.object().keys({
     title: Joi.string().required(),
     body: Joi.string().required(),
     tags: Joi.array().items(Joi.string()).required(),
-    user: ctx.state.user,
   });
 
-  const result = schema.validate(ctx.request);
+  const result = schema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
@@ -66,6 +58,7 @@ export const write = async (ctx) => {
     title,
     body,
     tags,
+    user: ctx.state.user,
   });
   try {
     await post.save();
@@ -75,6 +68,7 @@ export const write = async (ctx) => {
   }
 };
 
+// 특정 글 가져오기
 export const list = async (ctx) => {
   try {
     const posts = await Post.find().exec();
@@ -86,20 +80,9 @@ export const list = async (ctx) => {
 
 export const read = async (ctx) => {
   ctx.body = ctx.state.post;
-
-  // const { id } = ctx.params;
-  // try {
-  //   const post = await Post.findById(id).exec();
-  //   if (!post) {
-  //     ctx.status = 404;
-  //     return;
-  //   }
-  //   ctx.body = post;
-  // } catch (e) {
-  //   ctx.throw(500, e);
-  // }
 };
 
+// 삭제하기
 export const remove = async (ctx) => {
   const { id } = ctx.params;
   try {
@@ -109,6 +92,8 @@ export const remove = async (ctx) => {
     ctx.throw(500, e);
   }
 };
+
+// 글 업데이트하기
 export const update = async (ctx) => {
   const { id } = ctx.params;
   try {

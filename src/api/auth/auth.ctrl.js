@@ -4,7 +4,9 @@ import User from '../../models/user';
 export const register = async (ctx) => {
   // requset body 검증
   const schema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
+    // userId: Joi.string().alphanum().min(3).max(20).required(),
+    email: Joi.string().required(),
+    userId: Joi.string().required(),
     password: Joi.string().required(),
   });
 
@@ -15,18 +17,22 @@ export const register = async (ctx) => {
     return;
   }
 
-  const { username, password } = ctx.request.body;
+  const { email, userId, password } = ctx.request.body;
+
   try {
     // 이름 겹치는 지 확인. 스태틱 메서드
-    const exists = await User.findByUsername(username);
+    const exists = await User.findByuserId(userId);
     if (exists) {
       ctx.status = 409;
+      console.log('1');
       return;
     }
 
     const user = new User({
-      username,
+      email,
+      userId,
     });
+
     // 인스턴스 메서드
     await user.setPassword(password);
     await user.save();
@@ -41,19 +47,20 @@ export const register = async (ctx) => {
     });
   } catch (e) {
     ctx.throw(500, e);
+    console.log('2');
   }
 };
 
 export const login = async (ctx) => {
-  const { username, password } = ctx.request.body;
+  const { userId, password, email } = ctx.request.body;
 
-  if (!username || !password) {
+  if (!userId || !password || !email) {
     ctx.status = 401;
     return;
   }
 
   try {
-    const user = await User.findByUsername(username);
+    const user = await User.findByuserId(userId);
 
     // 계정 존재하는 지?
     if (!user) {
