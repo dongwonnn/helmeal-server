@@ -34,11 +34,10 @@ let corsOptions = {
   credentials: true,
 };
 
+// 미들웨어 적용
 // CORS 허용
 app.proxy = true; // true 일때 proxy 헤더들을 신뢰함
 app.use(cors(corsOptions));
-
-// 미들웨어 적용
 app.use(bodyParser());
 app.use(jwtMiddleware);
 

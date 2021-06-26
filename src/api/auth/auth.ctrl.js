@@ -52,7 +52,7 @@ export const register = async (ctx) => {
 };
 
 export const login = async (ctx) => {
-  const { userId, password, email } = ctx.request.body;
+  const { email, userId, password } = ctx.request.body;
 
   if (!userId || !password || !email) {
     ctx.status = 401;
