@@ -3,34 +3,38 @@ import User from '../../models/user';
 
 export const register = async (ctx) => {
   // requset body 검증
-  const schema = Joi.object().keys({
-    // userId: Joi.string().alphanum().min(3).max(20).required(),
-    email: Joi.string().required(),
-    userId: Joi.string().required(),
-    password: Joi.string().required(),
-  });
+  // const schema = Joi.object().keys({
+  //   // userId: Joi.string().alphanum().min(3).max(20).required(),
+  //   email: Joi.string().required(),
+  //   userId: Joi.string().required(),
+  //   password: Joi.string().required(),
+  // });
 
-  const result = schema.validate(ctx.request.body);
-  if (result.error) {
-    ctx.status = 400;
-    ctx.body = result.error;
-    return;
-  }
+  // const result = schema.validate(ctx.request.body);
+  // if (result.error) {
+  //   ctx.status = 400;
+  //   ctx.body = result.error;
+  //   return;
+  // }
 
-  const { email, userId, password } = ctx.request.body;
+  const { email, password, phoneNum, birthday, userId, sex } = ctx.request.body;
 
   try {
     // 이름 겹치는 지 확인. 스태틱 메서드
-    const exists = await User.findByuserId(userId);
+    const exists = await User.findByuserId(email);
     if (exists) {
       ctx.status = 409;
-      console.log('1');
+      ctx.body = '이름이 겹칩니다.';
       return;
     }
 
     const user = new User({
       email,
+      password,
+      phoneNum,
+      birthday,
       userId,
+      sex,
     });
 
     // 인스턴스 메서드
@@ -47,20 +51,19 @@ export const register = async (ctx) => {
     });
   } catch (e) {
     ctx.throw(500, e);
-    console.log('2');
   }
 };
 
 export const login = async (ctx) => {
-  const { email, userId, password } = ctx.request.body;
+  const { email, password } = ctx.request.body;
 
-  if (!userId || !password || !email) {
+  if (!password || !email) {
     ctx.status = 401;
     return;
   }
 
   try {
-    const user = await User.findByuserId(userId);
+    const user = await User.findByuserId(email);
 
     // 계정 존재하는 지?
     if (!user) {
@@ -82,6 +85,8 @@ export const login = async (ctx) => {
       httpOnly: true,
     });
   } catch (e) {
+    console.log('3');
+
     ctx.throw(500, e);
   }
 };
