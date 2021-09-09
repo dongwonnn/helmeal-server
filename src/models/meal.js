@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-// Meal 스키마 정의
 const MealSchema = new Schema({
   id: String,
   title: String,

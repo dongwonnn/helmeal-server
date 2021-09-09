@@ -1,5 +1,4 @@
 import Snack from '../../models/Snack';
-// import Joi from '@hapi/joi';
 
 export const snackRegister = async (ctx) => {
   const {
